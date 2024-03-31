@@ -1,4 +1,4 @@
-FROM docker.io/library/ubuntu:latest
+FROM docker.io/library/ubuntu:rolling
 RUN apt-get update && apt-get install -y \
     ghostscript \
     enscript
