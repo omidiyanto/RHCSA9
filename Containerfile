@@ -1,5 +1,5 @@
 FROM docker.io/library/ubuntu:rolling
-RUN apt-get update && apt-get install -y \
+RUN apt-get install -y \
     ghostscript \
     enscript
 
