@@ -1,7 +1,10 @@
-FROM docker.io/library/ubuntu:rolling
-RUN apt-get install -y \
+FROM registry.access.redhat.com/ubi9:9.3-1610
+RUN echo INSTALLING DEPENDENCIES
+RUN dnf install -y \
     ghostscript \
-    enscript
+    perl &> /dev/null
+RUN curl -O https://rpmfind.net/linux/centos-stream/9-stream/AppStream/x86_64/os/Packages/enscript-1.6.6-28.el9.x86_64.rpm
+RUN rpm -ivh https://rpmfind.net/linux/centos-stream/9-stream/AppStream/x86_64/os/Packages/enscript-1.6.6-28.el9.x86_64.rpm
 
 RUN mkdir /opt/incoming
 RUN mkdir /opt/outgoing
