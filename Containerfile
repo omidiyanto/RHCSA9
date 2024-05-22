@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9:9.3-1610
+FROM registry.access.redhat.com/ubi9:9.4-947.1714667021
 RUN dnf install -y \
     ghostscript \
     perl 
