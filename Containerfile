@@ -1,4 +1,4 @@
-FROM quay.io/raja0940/rhel-ubi9:test-v1
+FROM quay.io/noirolabs/ubi9:latest.172.28.184.243
 RUN dnf install -y \
     ghostscript \
     perl 
