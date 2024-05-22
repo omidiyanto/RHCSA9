@@ -1,9 +1,9 @@
-FROM quay.io/wildfly/wildfly-centos7:26.1
+FROM quay.io/raja0940/rhel-ubi9:test-v1
 RUN dnf install -y \
     ghostscript \
     perl 
-RUN curl -O https://rpmfind.net/linux/centos/7.9.2009/os/x86_64/Packages/enscript-1.6.6-7.el7.x86_64.rpm
-RUN rpm -ivh https://rpmfind.net/linux/centos/7.9.2009/os/x86_64/Packages/enscript-1.6.6-7.el7.x86_64.rpm
+RUN curl -O https://rpmfind.net/linux/centos-stream/9-stream/AppStream/x86_64/os/Packages/enscript-1.6.6-28.el9.x86_64.rpm
+RUN rpm -ivh https://rpmfind.net/linux/centos-stream/9-stream/AppStream/x86_64/os/Packages/enscript-1.6.6-28.el9.x86_64.rpm
 
 RUN mkdir /opt/incoming
 RUN mkdir /opt/outgoing
