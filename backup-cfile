@@ -1,23 +1,25 @@
-FROM registry.access.redhat.com/ubi9:9.4-947.1714667021
-RUN dnf install -y \
-    ghostscript \
-    perl 
-RUN curl -O https://rpmfind.net/linux/centos-stream/9-stream/AppStream/x86_64/os/Packages/enscript-1.6.6-28.el9.x86_64.rpm
-RUN rpm -ivh https://rpmfind.net/linux/centos-stream/9-stream/AppStream/x86_64/os/Packages/enscript-1.6.6-28.el9.x86_64.rpm
+FROM alpine:latest
 
-RUN mkdir /opt/incoming
-RUN mkdir /opt/outgoing
-RUN echo "while true"  >> /usr/local/bin/ascii2pdf
-RUN echo "do"  >> /usr/local/bin/ascii2pdf
-RUN echo "CURRENT_DIR='/opt/incoming'"  >> /usr/local/bin/ascii2pdf
-RUN echo "#app=#(ls -Art1 datas | tail -n 1)"  >> /usr/local/bin/ascii2pdf
-RUN echo "text1 "  >> /usr/local/bin/ascii2pdf
-RUN echo "enscript /opt/incoming/-o - | ps2pdf - /opt/outgoing/.txt"  >> /usr/local/bin/ascii2pdf
-RUN echo "done"  >> /usr/local/bin/ascii2pdf
-RUN sed -i 's/text1/echo $FILE/g' /usr/local/bin/ascii2pdf
-RUN sed -i 's/-o/$FILE  -o/g'  /usr/local/bin/ascii2pdf
-RUN sed -i 's/.txt/$FILE/g'  /usr/local/bin/ascii2pdf
-RUN sed -i 's/#app=#/FILE=$/g'  /usr/local/bin/ascii2pdf
-RUN sed -i 's/datas/${CURRENT_DIR}/g'  /usr/local/bin/ascii2pdf
-RUN chmod 777 /usr/local/bin/ascii2pdf
-CMD [ "/bin/bash", "-c", "/usr/local/bin/ascii2pdf" ]
+# Install required packages
+RUN apk add --no-cache \
+    ghostscript \
+    curl \
+    enscript
+
+# Create directories for incoming and outgoing files
+RUN mkdir -p /opt/incoming /opt/outgoing
+
+# Create the ascii2pdf script
+RUN echo "while true" > /usr/local/bin/ascii2pdf && \
+    echo "do" >> /usr/local/bin/ascii2pdf && \
+    echo "CURRENT_DIR='/opt/incoming'" >> /usr/local/bin/ascii2pdf && \
+    echo "FILE=\$(ls -Art1 \${CURRENT_DIR} | tail -n 1)" >> /usr/local/bin/ascii2pdf && \
+    echo "echo \${FILE}" >> /usr/local/bin/ascii2pdf && \
+    echo "enscript \${CURRENT_DIR}/\${FILE} -o - | ps2pdf - /opt/outgoing/\${FILE}" >> /usr/local/bin/ascii2pdf && \
+    echo "done" >> /usr/local/bin/ascii2pdf
+
+# Set script permissions
+RUN chmod +x /usr/local/bin/ascii2pdf
+
+# Run the ascii2pdf script
+CMD [ "/bin/sh", "-c", "/usr/local/bin/ascii2pdf" ]
